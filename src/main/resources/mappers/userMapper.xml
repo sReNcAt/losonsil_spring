@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+
+	<!-- 추가 -->
+	<insert id="create" parameterType="UserVo">
+		<![CDATA[
+		INSERT INTO user (
+		    user_name, user_pw, password
+		) VALUES (
+		    #{user_name}, #{user_pw}, #{password}
+		)
+		]]>
+	</insert>
+
+	<!-- 보기 -->
+	<select id="read" resultType="UserVo">
+		<![CDATA[
+		SELECT
+		    T_USER.idx, T_USER.user_name, T_USER.user_pw, T_USER.createAt
+		FROM user AS T_USER
+		WHERE
+			T_USER.user_name = #{user_name}
+		LIMIT 1
+		]]>
+	</select>
+
+	<!-- 수정 -->
+	<select id="update">
+		<![CDATA[
+		UPDATE user SET idx = #{idx}
+		]]>
+		<if test="user_pw != null">
+		    , user_pw = #{user_pw}
+		</if>
+		<![CDATA[
+		WHERE idx = #{idx}
+		]]>
+	</select>
+
+ 	<!-- 삭제 -->
+	<select id="delete">
+		<![CDATA[
+		DELETE FROM user WHERE user_name = #{user_name} LIMIT 1
+		]]>
+	</select>
+
+	<!-- 목록 -->
+	<select id="all" resultType="UserVo">
+		<![CDATA[
+		SELECT
+		    T_USER.idx, T_USER.user_name, T_USER.user_pw, T_USER.createAt
+		FROM user AS T_USER
+		]]>
+	</select>
+
+</mapper>

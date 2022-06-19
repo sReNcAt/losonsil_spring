@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="characterInfo">
+
+	<!-- 추가 -->
+	<insert id="create" parameterType="CharacterInfoVo">
+		<![CDATA[
+		INSERT INTO character_info (
+		    user_idx, character_name, level, c_level, server, class_
+		) VALUES (
+		    #{user_idx}, #{character_name}, #{level}, #{c_level}, #{server}, #{class_}
+		)
+		]]>
+	</insert>
+
+	<!-- 보기 -->
+	<select id="read" resultType="CharacterInfoVo">
+		<![CDATA[
+		SELECT
+		    t_character_info.idx, t_character_info.user_idx, t_character_info.character_name
+		    , t_character_info.level, t_character_info.c_level, t_character_info.server
+		    , t_character_info.class_, t_character_info.createAt, t_character_info.updateAt
+		FROM character_info AS t_character_info
+		WHERE
+			t_character_info.idx = #{idx}
+		LIMIT 1
+		]]>
+	</select>
+
+	<!-- 수정 -->
+	<select id="update">
+		<![CDATA[
+		UPDATE character_info SET idx = #{idx}
+		]]>
+		<if test="level != null">
+		    , level = #{level}
+		</if>
+		<if test="c_level != null">
+		    , c_level = #{c_level}
+		</if>
+		<if test="updateAt != null">
+		    , updateAt = #{updateAt}
+		</if>
+		<![CDATA[
+		WHERE idx = #{idx}
+		]]>
+	</select>
+
+ 	<!-- 삭제 -->
+	<select id="delete">
+		<![CDATA[
+		DELETE FROM character_info WHERE idx = #{idx} LIMIT 1
+		]]>
+	</select>
+
+	<!-- 목록 -->
+	<select id="all" resultType="CharacterInfoVo">
+		<![CDATA[
+		SELECT
+		    t_character_info.idx, t_character_info.user_idx, t_character_info.character_name
+		    , t_character_info.level, t_character_info.c_level, t_character_info.server
+		    , t_character_info.class_, t_character_info.createAt, t_character_info.updateAt
+		FROM character_info AS t_character_info
+		WHERE 1=1
+		]]>
+		<if test="idx != null">
+		    AND t_character_info.idx = #{idx}
+		</if>
+		<if test="user_idx != null">
+		    AND t_character_info.user_idx = #{user_idx}
+		</if>
+		<if test="character_name != null">
+		    AND t_character_info.character_name = #{character_name}
+		</if>
+		<![CDATA[
+			ORDER BY t_character_info.idx ASC
+		]]>
+	</select>
+
+</mapper>

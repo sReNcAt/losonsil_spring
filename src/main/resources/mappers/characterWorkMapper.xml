@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="characterWork">
+
+	<!-- 추가 -->
+	<insert id="create" parameterType="CharacterWorkVo">
+		<![CDATA[
+		INSERT INTO character_work (
+		    character_idx, work_type, workGubun, workStatus, workDate, workTime
+		) VALUES (
+		    #{character_idx}, #{work_type}, #{workGubun}, #{workStatus}, #{workDate}, #{workTime}
+		)
+		]]>
+	</insert>
+
+	<!-- 보기 -->
+	<select id="read" resultType="CharacterWorkVo">
+		<![CDATA[
+		SELECT
+		    t_character_work.idx, t_character_work.character_idx, t_character_work.work_type, t_character_work.workGubun, t_character_work.workStatus
+		    , t_character_work.workDate, t_character_work.workTime, t_character_work.createAt, t_character_work.updateAt
+		FROM character_work AS t_character_work
+		WHERE
+			t_character_work.idx = #{idx}
+		LIMIT 1
+		]]>
+	</select>
+
+	<!-- 수정 -->
+	<select id="update">
+		<![CDATA[
+		UPDATE character_work SET idx = #{idx}
+		]]>
+		<if test="work_type != null">
+		    , work_type = #{work_type}
+		</if>
+		<if test="workGubun != null">
+		    , workGubun = #{workGubun}
+		</if>
+		<if test="workStatus != null">
+		    , workStatus = #{workStatus}
+		</if>
+		<if test="workDate != null">
+		    , workDate = #{workDate}
+		</if>
+		<if test="workTime != null">
+		    , workTime = #{workTime}
+		</if>
+		<if test="updateAt != null">
+		    , updateAt = #{updateAt}
+		</if>
+		<![CDATA[
+		WHERE idx = #{idx}
+		]]>
+	</select>
+
+ 	<!-- 삭제 -->
+	<select id="delete">
+		<![CDATA[
+		DELETE FROM character_work WHERE idx = #{idx} LIMIT 1
+		]]>
+	</select>
+
+	<!-- 목록 -->
+	<select id="all" resultType="CharacterWorkVo">
+		<![CDATA[
+		SELECT
+		    t_character_work.idx, t_character_work.character_idx, t_character_work.work_type, t_character_work.workGubun, t_character_work.workStatus
+		    , t_character_work.workDate, t_character_work.workTime, t_character_work.createAt, t_character_work.updateAt
+		FROM character_work AS t_character_work
+		WHERE 1=1
+		]]>
+		<if test="idx != null">
+		    AND t_character_work.idx = #{idx}
+		</if>
+		<if test="character_idx != null">
+		    AND t_character_work.character_idx = #{character_idx}
+		</if>
+		<if test="work_type != null">
+		    AND t_character_work.work_type = #{work_type}
+		</if>
+		<if test="workGubun != null">
+		    AND t_character_work.workGubun = #{workGubun}
+		</if>
+		<if test="workStatus != null">
+		    AND t_character_work.workStatus = #{workStatus}
+		</if>
+		<if test="workDate != null">
+			<![CDATA[
+				AND t_character_work.createAt BETWEEN timestamp(DATE_ADD(DATE(#{workDate}),INTERVAL 6 HOUR)) AND timestamp(DATE_ADD(DATE(DATE_ADD(#{workDate},INTERVAL 1 DAY)),INTERVAL 6 HOUR))
+			]]>
+		</if>
+		<![CDATA[
+			ORDER BY t_character_work.idx ASC
+		]]>
+	</select>
+
+</mapper>
